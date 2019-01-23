@@ -1,8 +1,8 @@
 puts "Как вас зовут?"
-  name = gets.chomp.capitalize
+name = gets.chomp.capitalize
 
 puts "Какой у вас рост?"
-  height = gets.chomp.to_i
+height = gets.chomp.to_i
 
 ideal_weight = height - 110
 
