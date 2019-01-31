@@ -10,10 +10,6 @@ class Station
     @trains.push(train)
   end
 
-  def which_trains
-    @trains.each { |train| print "#{train.number_trn}, " }
-  end
-
   def which_types(type)
     @trains.select { |trn| trn.type == type }.count
   end

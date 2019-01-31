@@ -45,15 +45,11 @@ class Train
     @station.take_train(self)
   end
 
-  end
-
   def next_station
-    index = @index
-    index += 1
+    route.stations[@index + 1]
   end
 
   def prev_station
-    index = @index
-    index -= 1 if index > 0
+    route.stations[@index - 1] if @index > 0
   end
 end
