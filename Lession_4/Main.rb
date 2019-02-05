@@ -1,0 +1,245 @@
+require_relative 'Route.rb'
+require_relative 'Station.rb'
+require_relative 'Train.rb'
+require_relative 'TrainCargo.rb'
+require_relative 'TrainPassenger.rb'
+require_relative 'CarriageCargo.rb'
+require_relative 'CarriagePassenger.rb'
+
+class Menu
+  attr_reader :stations, :routes, :trains, :carriages
+
+  def initialize
+    @stations = []
+    @routes = []
+    @trains = []
+    @carriages = []
+    menu
+  end
+
+  def menu
+    loop do
+      puts "С чем хотите работать?"
+      puts "1.Поезда"
+      puts "2.Станции"
+      puts "3.Маршруты"
+      puts "0.Выход"
+      case gets.chomp
+      when "1" train_menu
+      when "2" route_menu
+      when "3" station_menu
+      when "0" break
+      else puts "Неправильный ввод."
+      end
+    end
+  end
+
+  def train_menu
+    loop do
+      puts "Поезда. Что хотите сделать?"
+      puts "1.Создать поезд"
+      puts "2.Задать маршрут"
+      puts "3.Прицепить вагон"
+      puts "4.Отцепить вагон"
+      puts "5.Список всех поездов"
+      puts "6.Переместить поезд вперед"
+      puts "7.Переместить поезд назад"
+      puts "0.Вернуться в предыдущее меню"
+      case gets.chomp
+      when "1" then create_train
+      when "3" then add_route_to_train
+      when "4" then add_car_to_train
+      when "5" then delete_car_from_train
+      when "6" then show_trains
+      when "7" then move_train_forward
+      when "8" then move_train_back
+      when "0" then break
+      else puts "Неправильный ввод"
+      end
+    end
+  end
+
+  def route_menu
+    loop do
+      puts "Маршруты. Что хотите сделать?"
+      puts "1.Создать маршрут"
+      puts "2.Добавить станцию в маршрут"
+      puts "3.Удалить станцию из маршрута"
+      puts "4.Список маршрутов"
+      puts "0.Вернуться в предыдущее меню"
+      case gets.chomp
+      when "1" then create_route
+      when "2" then add_station_to_route
+      when "3" then delete_station_from_route
+      when "4" then show_routes
+      when "0" then break
+      else puts "Неправильный ввод"
+      end
+    end
+  end
+
+  def station_menu
+    loop do
+      puts "Станции. Что хотите сделать?"
+      puts "1.Создать станцию"
+      puts "2.Список всех станций"
+      puts "3.Cписок поездов на станции"
+      puts "0.Вернуться в предыдущее меню"
+      case gets.chomp
+      when "1" then create_station
+      when "2" then show_stations
+      when "3" then show_stations_on_route
+      when "0" then break
+      else puts "Неправильный ввод"
+      end
+    end
+  end
+
+  def create_train
+    puts "Введите номер поезда"
+    number = gets.chomp
+    puts "Пассажирский или грузовой?"
+    type = gets.chomp.downcase
+    if type == "грузовой"
+      trains << CargoTrain.new(number)
+      puts "Грузовой поезд создан"
+    elsif type == "пассажирский"
+      trains << PassengerTrain.new(number)
+      puts "Пассажирский поезд создан"
+    else
+      puts "Неправильный ввод. Повторите."
+      create_train
+    end
+  end
+
+  def select_train
+    show_trains # Выводит список всех поездов
+    puts "Выберете номер поезда"
+    @trn = trains[gets.to_i - 1]
+  end
+
+  def add_route_to_train
+    select_train
+    show_routes
+    puts "Выберете номер маршрута"
+    route = routes[gets.to_i - 1]
+    @trn.take_route(route)
+    puts "Поезду #{trn} добавлен маршрут #{route}"
+  end
+
+  def add_car_to_train
+    select_train
+    car = trn.type == :cargo ? CargoCar.new : PassengerCar.new
+    @trn.add_car(car)
+    puts "Вагон добавлен к поезду"
+  end
+
+  def delete_car_from_train
+    select_train
+    @trn.remove_car(-1)
+    puts "Вагон отцеплен"
+  end
+
+  def show_trains
+    if trains.any?
+      trains.each.with_index(1) do |train, index|
+        print "#{index}: #{train.number}-#{train.type}; "
+      end
+    else
+      puts "Нет созданных поездов"
+    end
+  end
+
+  def move_train_forward
+    select_train
+    trn.move_forward
+    puts "Поезд перемещен вперед"
+  end
+
+  def move_train_back
+    select_train
+    trn.move_back
+    puts "Поезд перемещен назад"
+  end
+
+  def create_route
+    if stations.size < 2
+      puts "В маршруте должно быть минимум две станции, создайте их"
+      return
+    end
+
+    puts "Есть следующие станции:"
+    stations.each.with_index(1) { |station, index| puts "#{index}: #{station.name}" }
+    puts "Введите номер начальной станции"
+    start = gets.chomp.to_i - 1
+    puts "Введите номер конечной станции"
+    finish = gets.chomp.to_i - 1
+    routes << Route.new(stations[start], stations[finish])
+    end
+  end
+
+  def show_routes
+    if routes.any?
+      routes.each.with_index(1) do |route, index|
+        puts "#{index}: #{route.show_stations}"
+      end
+    else
+      puts "Маршрутов не создано"
+    end
+  end
+
+  def select_station
+    show_stations # Выводит список всех станций
+    puts "Выберете номер станции"
+    @stn = stations[gets.to_i - 1]
+  end
+
+  def add_station_to_route
+    show_routes
+    puts "Выберете номер маршрута"
+    route = routes[gets.to_i - 1]
+    select_station
+    route.add_station(@stn)
+    puts "Станция #{@stn} добавлена в маршрут #{route}"
+  end
+
+  def delete_station_from_route
+    show_routes
+    puts "Выберете номер маршрута"
+    route = routes[gets.to_i - 1]
+    show_stations_on_route
+    puts "Выберете номер станции"
+    @stn = route.stations[gets.to_i - 1]
+    route.del_station(@stn)
+    puts "Станция #{@stn} удалена из маршрута #{route}"
+  end
+
+  def create_station
+    puts "Введите название станции"
+    stations << Station.new(gets.chomp)
+    puts "Станция создана"
+  end
+
+  def show_stations
+    if stations.any?
+      stations.each.with_index(1) do |station, index|
+        puts "#{index}: #{station}"
+      end
+    else
+      puts "Станций не создано"
+    end
+  end
+
+  def show_stations_on_route
+    show_routes
+    puts "Выберете номер маршрута"
+    route = routes[gets.to_i - 1]
+    if route.stations.any?
+      route.stations.each.with_index(1) do |station, index|
+        puts "#{index}: #{station}"
+      end
+    else
+      puts "Станций на маршруте не создано"
+    end
+  end
+end

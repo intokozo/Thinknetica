@@ -6,12 +6,12 @@ class Station
     @trains = []
   end
 
-  def take_train(train)
-    @trains.push(train)
+  def which_types(type)
+    @trains.count { |trn| trn.type == type }
   end
 
-  def which_types(type)
-    @trains.select { |trn| trn.type == type }.count
+  def take_train(train)
+    @trains.push(train)
   end
 
   def send_train(train)
