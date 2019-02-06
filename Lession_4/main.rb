@@ -1,10 +1,10 @@
-require_relative 'Route.rb'
-require_relative 'Station.rb'
-require_relative 'Train.rb'
-require_relative 'TrainCargo.rb'
-require_relative 'TrainPassenger.rb'
-require_relative 'CarriageCargo.rb'
-require_relative 'CarriagePassenger.rb'
+require_relative 'route.rb'
+require_relative 'station.rb'
+require_relative 'train.rb'
+require_relative 'train_cargo.rb'
+require_relative 'train_passenger.rb'
+require_relative 'carriage_cargo.rb'
+require_relative 'carriage_passenger.rb'
 
 class Menu
   attr_reader :stations, :routes, :trains
@@ -152,7 +152,7 @@ class Menu
 
   def move_train_forward
     select_train
-    if @trn.station != nil
+    if @trn.station
       @trn.move_forward
     puts "Поезд перемещен вперед\n "
     else
@@ -162,7 +162,7 @@ class Menu
 
   def move_train_back
     select_train
-    if @trn.station != nil
+    if @trn.station
       @trn.move_back
     puts "Поезд перемещен назад\n "
     else
@@ -245,7 +245,7 @@ class Menu
     route = routes[gets.to_i - 1]
     if route.stations.any?
       route.stations.each.with_index(1) do |station, index|
-        puts "#{index}: #{station}"
+        puts "#{index}: #{station.name}"
       end
     else
       puts "Станций на маршруте не создано\n "
