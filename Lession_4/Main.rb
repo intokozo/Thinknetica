@@ -7,13 +7,12 @@ require_relative 'CarriageCargo.rb'
 require_relative 'CarriagePassenger.rb'
 
 class Menu
-  attr_reader :stations, :routes, :trains, :carriages
+  attr_reader :stations, :routes, :trains
 
   def initialize
     @stations = []
     @routes = []
     @trains = []
-    @carriages = []
     menu
   end
 
@@ -25,10 +24,10 @@ class Menu
       puts "3.Маршруты"
       puts "0.Выход"
       case gets.chomp
-      when "1" train_menu
-      when "2" route_menu
-      when "3" station_menu
-      when "0" break
+      when "1" then train_menu
+      when "2" then station_menu
+      when "3" then route_menu
+      when "0" then break
       else puts "Неправильный ввод."
       end
     end
@@ -47,12 +46,12 @@ class Menu
       puts "0.Вернуться в предыдущее меню"
       case gets.chomp
       when "1" then create_train
-      when "3" then add_route_to_train
-      when "4" then add_car_to_train
-      when "5" then delete_car_from_train
-      when "6" then show_trains
-      when "7" then move_train_forward
-      when "8" then move_train_back
+      when "2" then add_route_to_train
+      when "3" then add_car_to_train
+      when "4" then delete_car_from_train
+      when "5" then show_trains
+      when "6" then move_train_forward
+      when "7" then move_train_back
       when "0" then break
       else puts "Неправильный ввод"
       end
@@ -98,22 +97,22 @@ class Menu
   def create_train
     puts "Введите номер поезда"
     number = gets.chomp
-    puts "Пассажирский или грузовой?"
+    puts "1.Пассажирский\n2.Грузовой"
     type = gets.chomp.downcase
-    if type == "грузовой"
-      trains << CargoTrain.new(number)
-      puts "Грузовой поезд создан"
-    elsif type == "пассажирский"
-      trains << PassengerTrain.new(number)
-      puts "Пассажирский поезд создан"
+    if type == "2"
+      trains << TrainCargo.new(number)
+      puts "Грузовой поезд создан\n "
+    elsif type == "1"
+      trains << TrainPassenger.new(number)
+      puts "Пассажирский поезд создан\n "
     else
-      puts "Неправильный ввод. Повторите."
+      puts "Неправильный ввод. Повторите\n "
       create_train
     end
   end
 
   def select_train
-    show_trains # Выводит список всех поездов
+    show_trains
     puts "Выберете номер поезда"
     @trn = trains[gets.to_i - 1]
   end
@@ -124,42 +123,51 @@ class Menu
     puts "Выберете номер маршрута"
     route = routes[gets.to_i - 1]
     @trn.take_route(route)
-    puts "Поезду #{trn} добавлен маршрут #{route}"
+    puts "Поезду добавлен маршрут\n "
   end
 
   def add_car_to_train
     select_train
-    car = trn.type == :cargo ? CargoCar.new : PassengerCar.new
+    car = @trn.type == :cargo ? Carriage_cargo.new : Carriage_passenger.new
     @trn.add_car(car)
-    puts "Вагон добавлен к поезду"
+    puts "Вагон добавлен к поезду\n "
   end
 
   def delete_car_from_train
     select_train
     @trn.remove_car(-1)
-    puts "Вагон отцеплен"
+    puts "Вагон отцеплен\n "
   end
 
   def show_trains
     if trains.any?
       trains.each.with_index(1) do |train, index|
-        print "#{index}: #{train.number}-#{train.type}; "
+        print "#{index}: #{train.number}(#{train.type}); "
       end
     else
-      puts "Нет созданных поездов"
+      puts "Нет созданных поездов\n "
+      train_menu
     end
   end
 
   def move_train_forward
     select_train
-    trn.move_forward
-    puts "Поезд перемещен вперед"
+    if @trn.station != nil
+      @trn.move_forward
+    puts "Поезд перемещен вперед\n "
+    else
+      puts "Назначьте поезду маршрут\n "
+    end
   end
 
   def move_train_back
     select_train
-    trn.move_back
-    puts "Поезд перемещен назад"
+    if @trn.station != nil
+      @trn.move_back
+    puts "Поезд перемещен назад\n "
+    else
+      puts "Назначьте поезду маршрут\n "
+    end
   end
 
   def create_route
@@ -175,16 +183,16 @@ class Menu
     puts "Введите номер конечной станции"
     finish = gets.chomp.to_i - 1
     routes << Route.new(stations[start], stations[finish])
-    end
   end
 
   def show_routes
     if routes.any?
       routes.each.with_index(1) do |route, index|
-        puts "#{index}: #{route.show_stations}"
+        puts "#{index}: #{route.stations[0].name}-#{route.stations[-1].name}"
       end
     else
-      puts "Маршрутов не создано"
+      puts "Маршрутов не создано\n "
+      menu
     end
   end
 
@@ -200,7 +208,7 @@ class Menu
     route = routes[gets.to_i - 1]
     select_station
     route.add_station(@stn)
-    puts "Станция #{@stn} добавлена в маршрут #{route}"
+    puts "Станция добавлена в маршрут\n "
   end
 
   def delete_station_from_route
@@ -211,22 +219,23 @@ class Menu
     puts "Выберете номер станции"
     @stn = route.stations[gets.to_i - 1]
     route.del_station(@stn)
-    puts "Станция #{@stn} удалена из маршрута #{route}"
+    puts "Станция удалена из маршрута\n "
   end
 
   def create_station
     puts "Введите название станции"
     stations << Station.new(gets.chomp)
-    puts "Станция создана"
+    puts "Станция создана\n "
   end
 
   def show_stations
     if stations.any?
       stations.each.with_index(1) do |station, index|
-        puts "#{index}: #{station}"
+        puts "#{index}: #{station.name}"
       end
     else
-      puts "Станций не создано"
+      puts "Станций не создано\n "
+      menu
     end
   end
 
@@ -239,7 +248,9 @@ class Menu
         puts "#{index}: #{station}"
       end
     else
-      puts "Станций на маршруте не создано"
+      puts "Станций на маршруте не создано\n "
     end
   end
 end
+
+start = Menu.new
