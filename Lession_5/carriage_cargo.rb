@@ -1,4 +1,4 @@
-class Carriage_cargo
+class Carriage_cargo < Carriage
 
   attr_reader :type
 

@@ -5,6 +5,8 @@ require_relative 'train_cargo.rb'
 require_relative 'train_passenger.rb'
 require_relative 'carriage_cargo.rb'
 require_relative 'carriage_passenger.rb'
+require_relative 'carriage.rb'
+require_relative 'modules.rb'
 
 class Menu
   attr_reader :stations, :routes, :trains

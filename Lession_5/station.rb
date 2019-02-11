@@ -1,9 +1,13 @@
 class Station
   attr_reader :trains, :name
 
+  @@all = []
+  include InstanceCounter
+
   def initialize(name)
     @name = name
     @trains = []
+    @@all.push(self)
   end
 
   def which_types(type)
@@ -16,5 +20,9 @@ class Station
 
   def send_train(train)
     @trains.delete(train)
+  end
+
+  def self.all
+    @@all.inspect
   end
 end
