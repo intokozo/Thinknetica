@@ -1,7 +1,3 @@
-module Manufacturer_company
-  attr_accessor :manufacturer_company
-end
-
 module InstanceCounter
   @@count = 0
 
@@ -12,7 +8,7 @@ module InstanceCounter
 
   module ClassMethods
     def instances
-      @@count
+      @count
     end
   end
 

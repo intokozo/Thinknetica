@@ -2,7 +2,7 @@ class Carriage
 
   attr_reader :type
 
-  include Manufacturer_company
+  include ManufacturerCompany
 
   def initialize(type)
     @type = type

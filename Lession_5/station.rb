@@ -1,13 +1,13 @@
 class Station
   attr_reader :trains, :name
 
-  @@all = []
+  @@stations = []
   include InstanceCounter
 
   def initialize(name)
     @name = name
     @trains = []
-    @@all.push(self)
+    @@stations.push(self)
   end
 
   def which_types(type)
@@ -23,6 +23,6 @@ class Station
   end
 
   def self.all
-    @@all.inspect
+    @@stations
   end
 end

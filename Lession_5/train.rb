@@ -2,17 +2,17 @@ class Train
 
   attr_reader :number, :carriages, :type, :speed, :station
 
-  include Manufacturer_company
+  include ManufacturerCompany
   include InstanceCounter
 
-  @@trains = []
+  @@trains = {}
 
   def initialize(number)
     @number = number
     @type = type
     @speed = 0
     @carriages = []
-    @@trains << self
+    @@trains[number] = self
   end
 
   def speed_up(accel = 10)
@@ -60,6 +60,6 @@ class Train
   end
 
   def self.find(number)
-    @@trains.select { |train| train.number == number }
+    @@trains[number]
   end
 end
