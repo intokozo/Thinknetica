@@ -2,7 +2,7 @@ class Train
 
   attr_reader :number, :carriages, :type, :speed, :station
 
-  include ManufacturerCompany
+  include ManufacturerСompany
   include InstanceCounter
 
   @@trains = {}
@@ -13,6 +13,7 @@ class Train
     @speed = 0
     @carriages = []
     @@trains[number] = self
+    register_instance
   end
 
   def speed_up(accel = 10)

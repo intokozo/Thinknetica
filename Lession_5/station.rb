@@ -8,6 +8,7 @@ class Station
     @name = name
     @trains = []
     @@stations.push(self)
+    register_instance
   end
 
   def which_types(type)
