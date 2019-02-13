@@ -6,10 +6,10 @@ module InstanceCounter
   end
 
   module ClassMethods
-    attr_accessor :count
+    attr_accessor :instances
 
     def instances
-      @count ||= 0
+      @instances ||= 0
     end
   end
 
@@ -18,7 +18,7 @@ module InstanceCounter
     private
 
     def register_instance
-      self.class.count += 1
-    end
+      self.class.instances += 1 #.count вместо обращения к переменной, запускался
+    end                         # метод, возвращающий nil, у которого нет метода '+'
   end
 end

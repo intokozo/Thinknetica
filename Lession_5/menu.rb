@@ -244,5 +244,3 @@ class Menu
     end
   end
 end
-
-start = Menu.new

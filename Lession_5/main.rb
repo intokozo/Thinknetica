@@ -9,3 +9,5 @@ require_relative 'carriage.rb'
 require_relative 'carriage_cargo.rb'
 require_relative 'carriage_passenger.rb'
 require_relative 'menu.rb'
+
+start = Menu.new
