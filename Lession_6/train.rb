@@ -4,16 +4,18 @@ class Train
 
   include ManufacturerСompany
   include InstanceCounter
+  include Valid
 
   @@trains = {}
+  NUMBER = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
   def initialize(number)
     @number = number
+    validate!
     @type = type
     @speed = 0
     @carriages = []
     @@trains[number] = self
-    NUMBER = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
     register_instance
   end
 

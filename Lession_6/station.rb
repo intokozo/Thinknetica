@@ -3,9 +3,11 @@ class Station
 
   @@stations = []
   include InstanceCounter
+  include Valid
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
     @@stations.push(self)
     register_instance
@@ -25,5 +27,9 @@ class Station
 
   def self.all
     @@stations
+  end
+
+  def validate!
+    raise ArgumentError, "Имя станции минимум из двух симолов" if name.length < 2
   end
 end
