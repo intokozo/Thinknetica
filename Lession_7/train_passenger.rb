@@ -4,7 +4,7 @@ class TrainPassenger < Train
 
   def initialize(number)
     super
-    @type = "passenger"
+    @type = :passenger
   end
 
   def add_car(car)

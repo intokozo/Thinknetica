@@ -39,6 +39,7 @@ class Train
     @route = route
     @station = route.stations[0]
     @index = 0
+    @station.take_train(self)
   end
 
   def move_forward
@@ -65,6 +66,10 @@ class Train
 
   def self.find(number)
     @@trains[number]
+  end
+
+  def each_car
+    @carriages.each.with_index(1) { |car, index| yield(car, index) }
   end
 
   def validate!
