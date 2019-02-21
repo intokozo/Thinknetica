@@ -1,6 +1,3 @@
-#    Выводить список вагонов у поезда (в указанном выше формате), используя созданные методы
-#    Выводить список поездов на станции (в указанном выше формате), используя  созданные методы
-#    Занимать место или объем в вагоне
 class Menu
   attr_reader :stations, :routes, :trains
 
@@ -35,20 +32,22 @@ class Menu
       puts "2.Задать маршрут"
       puts "3.Прицепить вагон"
       puts "4.Отцепить вагон"
-      puts "5.Список вагонов у поезда"
-      puts "6.Список всех поездов"
-      puts "7.Переместить поезд вперед"
-      puts "8.Переместить поезд назад"
+      puts "5.Занять место в вагоне"
+      puts "6.Список вагонов у поезда"
+      puts "7.Список всех поездов"
+      puts "8.Переместить поезд вперед"
+      puts "9.Переместить поезд назад"
       puts "0.Вернуться в предыдущее меню"
       case gets.chomp
       when "1" then create_train
       when "2" then add_route_to_train
       when "3" then add_car_to_train
       when "4" then delete_car_from_train
-      when "5" then show_carriages
-      when "6" then show_trains
-      when "7" then move_train_forward
-      when "8" then move_train_back
+      when "5" then take_space_in_car
+      when "6" then show_carriages
+      when "7" then show_trains
+      when "8" then move_train_forward
+      when "9" then move_train_back
       when "0" then break
       else puts "Неправильный ввод"
       end
@@ -127,10 +126,10 @@ class Menu
     select_train
     if @trn.type == :cargo
       puts 'Введите объем вагона'
-      car = Carriage_cargo.new(gets.to_i)
+      car = CarriageCargo.new(gets.to_i)
     elsif @trn.type == :passenger
       puts 'Введите количество посадочных мест в вагоне'
-      car = Carriage_passenger.new(gets.to_i)
+      car = CarriagePassenger.new(gets.to_i)
     end
     @trn.add_car(car)
     puts "Вагон добавлен к поезду\n "
@@ -140,6 +139,26 @@ class Menu
     select_train
     @trn.remove_car(-1)
     puts "Вагон отцеплен\n "
+  end
+
+  def take_space_in_car
+    show_carriages
+    puts "Выберете номер вагона"
+    car = @trn.carriages[gets.to_i - 1]
+    case car.type
+    when :passenger
+      car.take_space
+      puts "Пассажир добавлен"
+    when :cargo
+      puts "Сколько займет груз?"
+      inp = gets.to_i
+      if car.space_free > inp
+        car.take_space(inp)
+        puts "Груз объемом #{inp} загружен в вагон."
+      else
+        print "Нет столько места"
+      end
+    end
   end
 
   def show_trains
@@ -155,7 +174,9 @@ class Menu
 
   def show_carriages
     select_train
-    @trn.each_car { |car, index| puts "Номер вагона: #{index}, #{car.info}" }
+    @trn.each_car do |car, index|
+      puts "Номер вагона: #{index}, тип вагона: #{car.type}, свободно: #{car.space_free}, занято: #{car.space_occupied}"
+    end
   end
 
   def move_train_forward
