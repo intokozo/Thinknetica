@@ -19,8 +19,7 @@ class Route
   end
 
   def validate!
-    if @stations.count < 2 || (@stations[0].name == @stations[-1].name)
-      raise ArgumentError, 'В маршруте должны быть две разные станции'
-    end
+    raise ArgumentError, 'В маршруте должны быть две разные станции' if
+      @stations.count < 2 || (@stations[0].name == @stations[-1].name)
   end
 end

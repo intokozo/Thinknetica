@@ -34,6 +34,6 @@ class Station
   end
 
   def validate!
-    raise ArgumentError, 'Имя станции минимум из двух симолов' if name.length < 2
+    raise ArgumentError, 'Имя станции минимум два символа' if name.length < 2
   end
 end
