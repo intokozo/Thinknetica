@@ -6,7 +6,7 @@ class Train
   include Valid
 
   @@trains = {}
-  NUMBER = freeze[/^[a-z0-9]{3}-?[a-z0-9]{2}$/i]
+  NUMBER = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
   def initialize(number)
     @number = number
