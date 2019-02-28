@@ -4,7 +4,7 @@ class Carriage
   include ManufacturerСompany
 
   def initialize(space)
-    @type = nil
+    @type = 'unknown'
     @space = space
     @space_occupied = 0
     @space_free = space
