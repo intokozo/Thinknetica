@@ -13,12 +13,17 @@ class MenuTrain < Menu
   end
 
   def create_train
-    puts 'Введите номер поезда'
-    number = gets.chomp
     puts "1.Пассажирский\n2.Грузовой"
     type = gets.chomp
     check_type(type)
-    type == '1' ? create_pass_train(number) : create_cargo_train(number)
+    begin
+      puts 'Введите номер поезда'
+      number = gets.chomp
+      type == '1' ? create_pass_train(number) : create_cargo_train(number)
+    rescue ArgumentError => e
+      puts e.message
+      retry
+    end
   end
 
   def check_type(type)
