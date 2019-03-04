@@ -4,6 +4,7 @@ class Train
   include ManufacturerСompany
   include InstanceCounter
   include Valid
+  extend Acсessors
 
   @@trains = {}
   NUMBER = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i.freeze
