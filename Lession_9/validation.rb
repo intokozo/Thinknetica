@@ -4,9 +4,13 @@ module Validate
   end
 
   def validate!
-    self.class.presence_method(@validation)
-    self.class.format_method(@validation, @regx)
-    self.class.type_method(@validation, @type_valid)
+    self.class.validations.each do |val|
+      send(
+        "#{val[:type_valid]}_method".to_sym,
+        instance_variable_get("@#{val[:name_valid]}"),
+        val[:option]
+      )
+    end
   end
 
   def valid?
@@ -18,6 +22,7 @@ module Validate
 
   module ClassMethods
     def validate(name_valid, type_valid, *option)
+       @validations = validations << { name_valid: name_valid, type_valid: type_valid, option: option }
       validate_choise(name_valid, type_valid, *option)
     rescue StandardError => error
       puts "Ошибка: #{error.message}"
@@ -26,7 +31,7 @@ module Validate
     def validate_choise(name_valid, type_valid, *option)
       case type_valid.to_sym
       when :presence
-        presence_method(name_valid)
+        presence_method(name_valid, _option)
       when :format
         format_method(name_valid, option)
       when :type
@@ -36,18 +41,15 @@ module Validate
       end
     end
 
-    def presence_method(name_valid)
-      @validation = name_valid
+    def presence_method(name_valid, _option)
       raise 'Значение не должно быть пустым' if name_valid.to_s.empty?
     end
 
     def format_method(name, option = /^[a-zа-я0-9-]+$/i)
-      @regx ||= option
       raise 'Значение неверного формата' unless name =~ option
     end
 
     def type_method(name, type)
-      @type_valid = type
       raise 'Значение неверного типа' unless name.class == type
     end
   end

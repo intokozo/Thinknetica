@@ -13,9 +13,9 @@ module Acсessors
   end
 
   def history_array(name)
-    array = Array.new("@#{name}_history".to_sym)
+    array = ["@#{name}_history".to_sym]
     define_method("@#{name}_history".to_sym) { instance_variable_get(array) }
-    array.push(instance_variable_get("@#{name}".to_sym))
+    array << instance_variable_get("@#{name}".to_sym)
   end
 
   def strong_attr_accessor(name, type)
