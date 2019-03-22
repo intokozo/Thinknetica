@@ -11,7 +11,7 @@ class Train
 
   def initialize(number)
     @number = number
-    validate!
+    valid!
     @type = type
     @speed = 0
     @carriages = []
@@ -72,7 +72,7 @@ class Train
     @carriages.each.with_index(1) { |car, index| yield(car, index) }
   end
 
-  def validate!
+  def valid!
     raise ArgumentError, 'Неправильный формат номера' unless number =~ NUMBER
   end
 end

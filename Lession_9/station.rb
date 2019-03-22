@@ -8,7 +8,7 @@ class Station
 
   def initialize(name)
     @name = name
-    validate!
+    valid!
     @trains = []
     @@stations.push(self)
     register_instance
@@ -34,7 +34,7 @@ class Station
     @trains.each { |trn| yield(trn) }
   end
 
-  def validate!
+  def valid!
     raise ArgumentError, 'Имя станции минимум два символа' if name.length < 2
   end
 end

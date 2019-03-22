@@ -7,7 +7,7 @@ class Route
 
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
-    validate!
+    valid!
     register_instance
   end
 
@@ -19,7 +19,7 @@ class Route
     stations.delete(station)
   end
 
-  def validate!
+  def valid!
     raise ArgumentError, 'В маршруте должны быть две разные станции' if
       @stations.count < 2 || (@stations[0].name == @stations[-1].name)
   end

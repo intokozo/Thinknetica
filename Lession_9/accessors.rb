@@ -18,7 +18,9 @@ module Acсessors
   def strong_attr_accessor(name, type)
     var_name = "@#{name}".to_sym
     define_method(name.to_sym) { instance_variable_get(var_name) }
-    raise ArgumentError, "Класс не соответствует #{type}" unless var_name.is_a? type
-    define_method("#{name}=".to_sym) { |value| instance_variable_set(var_name, value) }
+    define_method("#{name}=".to_sym) do |value|
+      raise ArgumentError, "Класс не соответствует #{type}" unless value.is_a? type
+      instance_variable_set(var_name, value)
+    end
   end
 end

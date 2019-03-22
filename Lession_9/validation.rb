@@ -38,9 +38,8 @@ module Validate
     end
 
     def validate(name_valid, type_valid, *option)
+      @validations ||= []
       @validations << { name_valid: name_valid, type_valid: type_valid, option: option }
-    rescue StandardError => error
-      puts "Ошибка: #{error.message}"
     end
   end
 end
