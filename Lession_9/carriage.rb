@@ -2,6 +2,8 @@ class Carriage
   attr_reader :type, :space, :space_occupied, :space_free
 
   include ManufacturerСompany
+  include Validate
+  extend Acсessors
 
   def initialize(space)
     @type = 'unknown'

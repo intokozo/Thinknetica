@@ -2,7 +2,8 @@ class Route
   attr_reader :stations
 
   include InstanceCounter
-  include Valid
+  include Validate
+  extend Acсessors
 
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]

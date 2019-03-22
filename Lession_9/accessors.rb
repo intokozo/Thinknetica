@@ -2,25 +2,23 @@ module Acсessors
   def attr_accessor_with_history(*names)
     names.each do |name|
       accessor(name)
-      history_array(name)
     end
   end
 
   def accessor(name)
     var_name = "@#{name}".to_sym
-    define_method(name.to_sym) { instance_variable_get(var_name) }
-    define_method("#{name}=".to_sym) { |value| instance_variable_set(var_name, value) }
-    instance_variable_set("@#{name}_history".to_sym, []) << instance_variable_get("@#{name}".to_sym)
-  end
-
-  def history_array(name)
-    define_method("#{name}_history".to_sym) { instance_variable_get("@#{name}_history".to_sym) }
+    arr_name = "@#{name}_history".to_sym
+    define_method(name) { instance_variable_get(var_name) }
+    define_method("#{name}_history") { instance_variable_get(arr_name) || [] }
+    define_method("#{name}=") do |value| instance_variable_set(var_name, value)
+      instance_variable_set(arr_name, instance_eval("#{name}_history") << value)
+    end
   end
 
   def strong_attr_accessor(name, type)
     var_name = "@#{name}".to_sym
     define_method(name.to_sym) { instance_variable_get(var_name) }
-    raise ArgumentError, "Класс не соответствует #{type}" unless var_name.is_a? type.capitalize
+    raise ArgumentError, "Класс не соответствует #{type}" unless var_name.is_a? type
     define_method("#{name}=".to_sym) { |value| instance_variable_set(var_name, value) }
   end
 end

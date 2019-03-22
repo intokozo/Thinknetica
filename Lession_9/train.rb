@@ -3,7 +3,6 @@ class Train
 
   include ManufacturerСompany
   include InstanceCounter
-  include Valid
   include Validate
   extend Acсessors
 

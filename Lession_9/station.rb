@@ -3,7 +3,8 @@ class Station
 
   @@stations = []
   include InstanceCounter
-  include Valid
+  include Validate
+  extend Acсessors
 
   def initialize(name)
     @name = name
